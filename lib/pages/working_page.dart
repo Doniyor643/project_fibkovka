@@ -100,7 +100,15 @@ class _WorkingPageState extends State<WorkingPage> {
               children: [
                 IconButton(
                     onPressed: (){
-                      Navigator.pushNamed(context, UpdateWorkingPage.id);
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => UpdateWorkingPage(
+                            name: works.name,
+                            sum: works.summa,
+                            text: works.text,
+                            size: works.size,
+                            imageUrl: works.urlAddress,
+                          )
+                      ));
                     },
                     icon: const Icon(Icons.drive_file_rename_outline),
                 color: Colors.red,),
@@ -114,41 +122,43 @@ class _WorkingPageState extends State<WorkingPage> {
                     color: Colors.white70,
                     border: Border.all(color: Colors.greenAccent)
                     ),
-                  child: Row(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Text(works.name,
-                            style: const TextStyle(fontSize: 15,),),
-                          Container(
-                            height: 70,
-                            width: 2,
-                            color: Colors.grey,
-                          ),
-                          Text(works.summa,
-                            style: const TextStyle(fontSize: 15,),),
-                          Container(
-                            height: 70,
-                            width: 2,
-                            color: Colors.grey,
-                          ),
-                          Text(works.number.toString(),
-                            style: const TextStyle(fontSize: 15,),),
-                          Container(
-                            height: 70,
-                            width: 2,
-                            color: Colors.grey,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              const Text("Jami summa:"),
-                              Text(_addSumma(works).toString(),
-                                style: const TextStyle(fontSize: 15,fontWeight: FontWeight.bold),),
+                              Text(works.name,
+                                style: const TextStyle(fontSize: 15,),),
+                              Container(
+                                height: 30,
+                                width: 2,
+                                color: Colors.grey,
+                              ),
+                              Text(works.summa,
+                                style: const TextStyle(fontSize: 15,),),
+                              Container(
+                                height: 30,
+                                width: 2,
+                                color: Colors.grey,
+                              ),
+                              Text("${works.number} ${works.size}",
+                                style: const TextStyle(fontSize: 15,),),
                             ],
                           ),
-                        ],
-                      )
+                    Container(
+                      height: 2,
+                      width: double.infinity,
+                      color: Colors.grey,),
+                    const SizedBox(height: 5,),
+                    Row(
+                      children: [
+                        Text("SUMMA : ${_addSumma(works)}",style: const TextStyle(fontWeight: FontWeight.bold),)
+                      ],
+                    )
+                    ],
+                  )
                 ),
               ],
             ),

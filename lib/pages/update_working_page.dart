@@ -10,7 +10,8 @@ import '../services/auth_service.dart';
 
 class UpdateWorkingPage extends StatefulWidget {
   static const String id = "update_working_page";
-  const UpdateWorkingPage({Key? key}) : super(key: key);
+  String name,sum,text,size,imageUrl;
+  UpdateWorkingPage({required this.name,required this.sum,required this.text,required this.size,required this.imageUrl,Key? key}) : super(key: key);
 
   @override
   State<UpdateWorkingPage> createState() => _UpdateWorkingPageState();
@@ -25,7 +26,7 @@ class _UpdateWorkingPageState extends State<UpdateWorkingPage> {
   String _selectedFileName = "";
   String _upLoadedPath = "";
   bool _isLoading = false;
-  String size = 'metr';
+  String? size = '';
 
 
   AuthService service = AuthService();
@@ -50,9 +51,9 @@ class _UpdateWorkingPageState extends State<UpdateWorkingPage> {
                 // Nomi
                 TextField(
                   controller: nameController,
-                  decoration: const InputDecoration(
-                      labelText: "Nomi",
-                      border: OutlineInputBorder()
+                  decoration: InputDecoration(
+                      labelText: widget.name,
+                      border: const OutlineInputBorder()
                   ),
                 ),
                 const SizedBox(height: 10,),
@@ -60,18 +61,18 @@ class _UpdateWorkingPageState extends State<UpdateWorkingPage> {
                 TextField(
                   keyboardType: TextInputType.number,
                   controller: sumController,
-                  decoration: const InputDecoration(
-                      labelText: "Narxi",
-                      border: OutlineInputBorder()
+                  decoration: InputDecoration(
+                      labelText: widget.sum,
+                      border: const OutlineInputBorder()
                   ),
                 ),
                 const SizedBox(height: 10,),
                 // Ma'lumot'
                 TextField(
                   controller: addressController,
-                  decoration: const InputDecoration(
-                      labelText: "Ma'lumot",
-                      border: OutlineInputBorder()
+                  decoration: InputDecoration(
+                      labelText: widget.text,
+                      border: const OutlineInputBorder()
                   ),
                 ),
                 const SizedBox(height: 10,),
@@ -82,14 +83,14 @@ class _UpdateWorkingPageState extends State<UpdateWorkingPage> {
                       border: Border.all(color: Colors.grey)
                   ),
                   child: ExpansionTile(
-                    title: Text(size,style: const TextStyle(fontWeight: FontWeight.bold),),
+                    title: Text(widget.size,style: const TextStyle(fontWeight: FontWeight.bold),),
                     children: [
                       // Meter
                       ListTile(
                         title: const Text("metr"),
                         onTap: (){
                           setState((){
-                            size = 'metr';
+                            widget.size = 'metr';
                           });
                         },
                       ),
@@ -98,7 +99,7 @@ class _UpdateWorkingPageState extends State<UpdateWorkingPage> {
                         title: const Text("dona"),
                         onTap: (){
                           setState((){
-                            size = 'dona';
+                            widget.size = 'dona';
                           });
                         },
                       ),
@@ -107,7 +108,7 @@ class _UpdateWorkingPageState extends State<UpdateWorkingPage> {
                         title: const Text("kg"),
                         onTap: (){
                           setState((){
-                            size = 'kg';
+                            widget.size = 'kg';
                           });
                         },
                       ),
@@ -118,54 +119,7 @@ class _UpdateWorkingPageState extends State<UpdateWorkingPage> {
                 const SizedBox(height: 10,),
 
                 // Button Rasm qo'shish
-                Container(
-                    height: 200,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(4)
-                    ),
-                    child: _selectedFileName.isEmpty
-                        ?
-                    Center(
-                      child: GestureDetector(
-                        onTap: (){
-                          _alertDialog();
-                        },
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.photo_camera_outlined,size: 50,color: Colors.grey,),
-                            Text("Rasm qo'shish",style: TextStyle(color: Colors.grey),)
-                          ],
-                        ),
-                      ),
-                    )
-                        :
-                    Container(
-                        height: 200,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade300,
-                            borderRadius: BorderRadius.circular(4),
-                            image: DecorationImage(
-                                image: FileImage(File(_selectedFile.path)), //Image.file(File(_selectedFile.path)),
-                                fit: BoxFit.cover
-                            )
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            IconButton(
-                              onPressed: (){
-                                _alertDialog();
-                              },
-                              icon: const Icon(Icons.drive_file_rename_outline),
-                              color: Colors.white,)
-                          ],)
-                    )
-                ),
+
                 const SizedBox(height: 30,),
                 ElevatedButton(
                     onPressed: (){
@@ -173,21 +127,20 @@ class _UpdateWorkingPageState extends State<UpdateWorkingPage> {
                         String name = nameController.text.trim();
                         String summa = sumController.text.trim();
                         String texts = addressController.text.trim();
-                        String sizes = size;
+                        String? sizes = size;
                         String num = '0';
                         if(name.isEmpty && summa.isEmpty && texts.isEmpty){
                           service.flutterToast("Barcha ma'lumotlar kiritilmagan");
                         }else{
-                          uploadFile(_selectedFile, name).whenComplete(() => {
-                            DatabaseService().addUserWork(name, summa, texts, sizes,num,_upLoadedPath),
 
+                            DatabaseService().updateUserWork(name, summa, texts, sizes!,num,_upLoadedPath).whenComplete(() => {
                             nameController.clear(),
-                            sumController.clear(),
+                                sumController.clear(),
                             addressController.clear(),
                             service.flutterToast("Ma'lumotlar kiritildi").whenComplete(() => {
                               Navigator.pushReplacementNamed(context, WorkingPage.id)
-                            })
-                          });
+                            }),
+                            });
                         }
                       }catch(e){
                         print(e);

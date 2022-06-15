@@ -33,7 +33,7 @@ class _MyAppState extends State<MyApp> {
         SignInPage.id:(context) => const SignInPage(),
         SignUpPage.id:(context) => const SignUpPage(),
         WorkingPage.id:(context) => const WorkingPage(),
-        UpdateWorkingPage.id:(context) => const UpdateWorkingPage(),
+        //UpdateWorkingPage.id:(context) => UpdateWorkingPage(),
         AddWorkingPage.id:(context) => const AddWorkingPage(),
       },
     );
